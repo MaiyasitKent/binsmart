@@ -1,7 +1,8 @@
-import torch
-import torch.nn as nn
 from transformers import AutoModelForImageClassification, AutoImageProcessor
 from PIL import Image
+import torch
+import torch.nn as nn
+import os
 
 processor = AutoImageProcessor.from_pretrained("google/efficientnet-b0")
 model = AutoModelForImageClassification.from_pretrained("google/efficientnet-b0")
@@ -15,18 +16,19 @@ class EfficientNetExplicit(nn.Module):
     
     def forward(self, pixel_values):
         outputs = self.efficientnet(pixel_values)
-        # last_hidden_state shape: [batch, 1280, 7, 7]
         x = outputs.last_hidden_state
-        # average pool
         x = torch.mean(x, dim=[2, 3])
-        # classifier
-        x = self.classifier(x)
-        return x
+        return self.classifier(x)
 
 wrapped = EfficientNetExplicit(model)
 wrapped.eval()
 
-img = Image.open("test.jpg").convert("RGB")
+# สร้างรูปจำลองแทน test.jpg
+if os.path.exists("test.jpg"):
+    img = Image.open("test.jpg").convert("RGB")
+else:
+    img = Image.new("RGB", (224, 224), color=(100, 149, 80))
+
 inputs = processor(images=img, return_tensors="pt")
 dummy = inputs["pixel_values"]
 
