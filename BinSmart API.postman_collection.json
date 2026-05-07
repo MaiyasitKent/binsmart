@@ -1,0 +1,27 @@
+{
+	"info": {
+		"_postman_id": "f92a1633-7e2e-450b-b2fd-ca2eee36cdf3",
+		"name": "BinSmart API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "52188121",
+		"_collection_link": "https://maiyasit-wisu-9673071.postman.co/workspace/MAIYASIT-WISUTKONGKAMON's-Works~ddd4b7aa-01ff-4d0e-89a4-fdaaebd1c154/collection/52188121-f92a1633-7e2e-450b-b2fd-ca2eee36cdf3?action=share&source=collection_link&creator=52188121"
+	},
+	"item": [
+		{
+			"name": "Predict Waste",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
