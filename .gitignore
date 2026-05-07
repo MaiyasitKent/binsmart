@@ -4,3 +4,4 @@ models/
 *.onnx
 __pycache__/
 *.pyc
+img/
