@@ -30,18 +30,27 @@ jobs:
         run: |
           PYTHONPATH=${{ github.workspace }} pytest tests/ -v
 
-  deploy:
+deploy:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
       - name: Deploy to Hugging Face Spaces
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           pip install huggingface_hub
-          python - << 'EOF'
+          python -c "
           from huggingface_hub import HfApi
+          import os
           api = HfApi()
           api.upload_folder(
-              folder_path=".",
-              repo_id="MaiyasitKent/binsmart",
+              folder_path='.',
+              repo_id='MaiyasitKent/binsmart',
+              repo_type='space',
+              token=os.environ['HF_TOKEN'],
+              ignore_patterns=['venv/', '*.pt', 'model_preprocessed.onnx', '__pycache__/', '.git/', 'jmeter-report/', 'results.jtl']
+          )
+          print('Deploy สำเร็จ!')
+          "
