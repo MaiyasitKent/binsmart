@@ -5,3 +5,9 @@ models/
 __pycache__/
 *.pyc
 img/
+binsmart.jmx
+elephant.jpeg
+huggingface_tokens
+jmeter-report/
+jmeter.log
+results.jtl

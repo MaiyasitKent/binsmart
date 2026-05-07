@@ -1,0 +1,47 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt
+          pip install pytest httpx lark
+
+      - name: Download model
+        run: |
+          python convert_onnx.py
+          mkdir -p models
+          mv model.onnx models/model.onnx
+
+      - name: Run tests
+        run: |
+          PYTHONPATH=${{ github.workspace }} pytest tests/ -v
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Deploy to Hugging Face Spaces
+        run: |
+          pip install huggingface_hub
+          python - << 'EOF'
+          from huggingface_hub import HfApi
+          api = HfApi()
+          api.upload_folder(
+              folder_path=".",
+              repo_id="MaiyasitKent/binsmart",
